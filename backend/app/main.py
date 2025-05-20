@@ -21,17 +21,15 @@ app = FastAPI(
     openapi_url=f"{settings.API_V1_STR}/openapi.json"
 )
 
+
+
 # Set up CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.BACKEND_CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-@app.exception_handler(RequestValidationError)
-async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    allow_headers=["*"],                                                 )                                                                                                                                                 @app.exception_handler(RequestValidationError)                           async def validation_exception_handler(request: Request, exc: RequestValidationError):
     logger.error(f"Validation error: {exc.errors()}")
     return JSONResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -40,10 +38,10 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 @app.exception_handler(Exception)
 async def general_exception_handler(request: Request, exc: Exception):
-    logger.error(f"Unexpected error: {str(exc)}")
+    logger.error(f"Unexpected error occurred: {str(exc)}", exc_info=True)
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-        content={"detail": "Internal server error"},
+        content={"detail": "An unexpected error occurred. Please try again later."},
     )
 
 # Include API router
@@ -73,7 +71,11 @@ async def health_check(db: Session = Depends(get_db)):
             "api": "running"
         }
     except Exception as e:
-        return {
-            "status": "unhealthy",
-            "error": str(e)
-        } 
+        logger.error(f"Health check failed: {str(e)}", exc_info=True)
+        return JSONResponse(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            content={
+                "status": "unhealthy",
+                "detail": "Service is currently unavailable"
+            }
+        ) 
