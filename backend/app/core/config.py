@@ -9,10 +9,9 @@ class Settings(BaseSettings):
     
     # CORS Configuration
     BACKEND_CORS_ORIGINS: List[str] = [
-        "http://localhost:3000",
-        "http://localhost:8000",
-        "http://127.0.0.1:3000",
-        "http://127.0.0.1:8000",
+        "http://89.169.150.10",
+        "http://89.169.150.10:3000",
+        "http://89.169.150.10:8000"
     ]
 
     @validator("BACKEND_CORS_ORIGINS", pre=True)
@@ -42,9 +41,9 @@ class Settings(BaseSettings):
     REDIS_PASSWORD: str | None = None
 
     # JWT
-    SECRET_KEY: str = "your-secret-key-here"  # Change in production
+    SECRET_KEY: str = "project-finder-secret-key-2024"  # Изменено для продакшена
     ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60  # Увеличено до 60 минут
 
     # ML Model
     MODEL_NAME: str = "all-MiniLM-L6-v2"  # Default sentence transformer model
