@@ -13,6 +13,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import axios from 'axios';
+import API_ENDPOINTS from '../config';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -33,7 +34,7 @@ const Profile = () => {
   const fetchUserData = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:8000/api/v1/auth/me', {
+      const response = await axios.get(API_ENDPOINTS.AUTH.ME, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUser(response.data.user);
@@ -63,7 +64,7 @@ const Profile = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.put(
-        'http://localhost:8000/api/v1/users/me',
+        API_ENDPOINTS.USERS.ME,
         formData,
         {
           headers: { Authorization: `Bearer ${token}` },

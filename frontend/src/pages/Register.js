@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import axios from 'axios';
+import API_ENDPOINTS from '../config';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ const Register = () => {
     e.preventDefault();
     try {
       console.log('Sending registration data:', formData);
-      const response = await axios.post('http://localhost:8000/api/v1/auth/register', formData);
+      const response = await axios.post(API_ENDPOINTS.AUTH.REGISTER, formData);
       console.log('Registration response:', response.data);
       localStorage.setItem('token', response.data.access_token);
       navigate('/');

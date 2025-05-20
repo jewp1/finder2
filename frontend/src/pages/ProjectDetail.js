@@ -11,6 +11,7 @@ import {
   Divider,
 } from '@mui/material';
 import axios from 'axios';
+import API_ENDPOINTS from '../config';
 
 const ProjectDetail = () => {
   const { id } = useParams();
@@ -25,7 +26,7 @@ const ProjectDetail = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get(
-        `http://localhost:8000/api/v1/projects/${id}`,
+        API_ENDPOINTS.PROJECTS.DETAIL(id),
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -40,7 +41,7 @@ const ProjectDetail = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.post(
-        `http://localhost:8000/api/v1/likes/project/${id}`,
+        API_ENDPOINTS.LIKES.PROJECT(id),
         {},
         {
           headers: { Authorization: `Bearer ${token}` },

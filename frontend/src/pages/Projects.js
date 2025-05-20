@@ -20,6 +20,7 @@ import {
 } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import axios from 'axios';
+import API_ENDPOINTS from '../config';
 
 const Projects = () => {
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ const Projects = () => {
   const fetchProjects = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:8000/api/v1/projects', {
+      const response = await axios.get(API_ENDPOINTS.PROJECTS.LIST, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setProjects(response.data || []);
@@ -58,7 +59,7 @@ const Projects = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get(
-        `http://localhost:8000/api/v1/projects/search?q=${searchQuery}`,
+        `${API_ENDPOINTS.PROJECTS.SEARCH}?q=${searchQuery}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -73,7 +74,7 @@ const Projects = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.post(
-        `http://localhost:8000/api/v1/likes/project/${projectId}`,
+        API_ENDPOINTS.LIKES.PROJECT(projectId),
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -96,7 +97,7 @@ const Projects = () => {
       };
       
       await axios.post(
-        'http://localhost:8000/api/v1/projects',
+        API_ENDPOINTS.PROJECTS.LIST,
         projectData,
         {
           headers: { Authorization: `Bearer ${token}` },

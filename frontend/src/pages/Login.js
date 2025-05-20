@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import axios from 'axios';
+import API_ENDPOINTS from '../config';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ const Login = () => {
     e.preventDefault();
     try {
       console.log('Sending login data:', formData);
-      const response = await axios.post('http://localhost:8000/api/v1/auth/login', formData);
+      const response = await axios.post(API_ENDPOINTS.AUTH.LOGIN, formData);
       console.log('Login response:', response.data);
       
       // Сохраняем токен и данные пользователя

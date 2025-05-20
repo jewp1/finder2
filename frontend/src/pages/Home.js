@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import API_ENDPOINTS from '../config';
 import {
   Container,
   Typography,
@@ -29,7 +30,7 @@ const Home = () => {
 
     const fetchUserData = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/v1/auth/me', {
+        const response = await axios.get(API_ENDPOINTS.AUTH.ME, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -132,4 +133,3 @@ const Home = () => {
   );
 };
 
-export default Home; 

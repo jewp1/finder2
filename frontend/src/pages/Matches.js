@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import { Favorite, Close } from '@mui/icons-material';
 import axios from 'axios';
+import API_ENDPOINTS from '../config';
 
 const Matches = () => {
   const [potentialMatches, setPotentialMatches] = useState([]);
@@ -31,7 +32,7 @@ const Matches = () => {
   const fetchPotentialMatches = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:8000/api/v1/matches/potential', {
+      const response = await axios.get(API_ENDPOINTS.MATCHES.POTENTIAL, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setPotentialMatches(response.data);
@@ -48,7 +49,7 @@ const Matches = () => {
   const fetchMatches = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:8000/api/v1/matches', {
+      const response = await axios.get(API_ENDPOINTS.MATCHES.LIST, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMatches(response.data);
@@ -63,7 +64,7 @@ const Matches = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.post(
-        `http://localhost:8000/api/v1/likes/user/${currentMatch.id}`,
+        API_ENDPOINTS.LIKES.USER(currentMatch.id),
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
