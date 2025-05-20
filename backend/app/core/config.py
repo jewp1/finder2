@@ -24,8 +24,8 @@ class Settings(BaseSettings):
 
     # Database
     POSTGRES_SERVER: str = "db"  # Changed from localhost to db for Docker
-    POSTGRES_USER: str = "postgres"
-    POSTGRES_PASSWORD: str = "postgres"
+    POSTGRES_USER: str = "project_finder"  # Updated to match docker-compose
+    POSTGRES_PASSWORD: str = "project_finder_password_2024"  # Updated to match docker-compose
     POSTGRES_DB: str = "project_finder"
     SQLALCHEMY_DATABASE_URI: str | None = None
 
