@@ -1,38 +1,28 @@
 #!/bin/sh
 
-# Wait for PostgreSQL to be ready
-echo "Waiting for PostgreSQL to be ready..."
-while ! nc -z db 5432; do
-  sleep 0.1
+DB_HOST="${POSTGRES_SERVER:-db}"
+DB_PORT="${POSTGRES_PORT:-5432}"
+
+echo "Waiting for PostgreSQL at $DB_HOST:$DB_PORT..."
+while ! nc -z "$DB_HOST" "$DB_PORT"; do
+  sleep 0.5
 done
 echo "PostgreSQL is ready!"
 
-# Run migrations
-echo "Running database migrations..."
-alembic upgrade head
+echo "Running Django migrations..."
+python manage.py makemigrations users projects likes matches --noinput
+python manage.py migrate --noinput
 
-# Start the application
-echo "Starting the application..."
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload --log-level debug &
+echo "Seeding test data..."
+python manage.py seed_data
 
-# Wait for the application to be ready
-echo "Waiting for the application to be ready..."
-max_attempts=30
-attempt=1
-while [ $attempt -le $max_attempts ]; do
-  if curl -s http://localhost:8000/health-check > /dev/null; then
-    echo "Application is ready!"
-    break
-  fi
-  echo "Attempt $attempt of $max_attempts: Application not ready yet..."
-  sleep 1
-  attempt=$((attempt + 1))
-done
+echo "Collecting static files..."
+python manage.py collectstatic --noinput
 
-if [ $attempt -gt $max_attempts ]; then
-  echo "Application failed to start within the expected time"
-  exit 1
-fi
-
-# Keep the container running
-wait 
+echo "Starting application..."
+exec gunicorn config.wsgi:application \
+    --bind 0.0.0.0:8000 \
+    --workers 4 \
+    --timeout 120 \
+    --access-logfile - \
+    --error-logfile -

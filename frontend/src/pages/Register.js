@@ -43,17 +43,15 @@ const Register = () => {
       navigate('/');
     } catch (err) {
       console.error('Registration error:', err.response?.data);
-      if (err.response?.data?.detail) {
-        if (Array.isArray(err.response.data.detail)) {
-          // Handle validation errors
-          const errorMessages = err.response.data.detail.map(error => {
-            const field = error.loc[error.loc.length - 1];
-            return `${field}: ${error.msg}`;
-          });
-          setError(errorMessages.join('\n'));
+      const data = err.response?.data;
+      if (data) {
+        if (typeof data.detail === 'string') {
+          setError(data.detail);
         } else {
-          // Handle other errors
-          setError(err.response.data.detail);
+          const messages = Object.entries(data)
+            .map(([field, msgs]) => `${field}: ${Array.isArray(msgs) ? msgs.join(', ') : msgs}`)
+            .join('\n');
+          setError(messages || 'An error occurred during registration');
         }
       } else {
         setError('An error occurred during registration');

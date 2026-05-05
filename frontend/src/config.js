@@ -1,4 +1,4 @@
-const API_URL = process.env.REACT_APP_API_URL || 'http://89.169.150.10:8000';
+const API_URL = process.env.REACT_APP_API_URL ?? '';
 
 export const API_ENDPOINTS = {
     AUTH: {
@@ -10,7 +10,7 @@ export const API_ENDPOINTS = {
         ME: `${API_URL}/api/v1/users/me`,
     },
     PROJECTS: {
-        LIST: `${API_URL}/api/v1/projects`,
+        LIST: `${API_URL}/api/v1/projects/`,
         SEARCH: `${API_URL}/api/v1/projects/search`,
         DETAIL: (id) => `${API_URL}/api/v1/projects/${id}`,
     },
@@ -19,7 +19,7 @@ export const API_ENDPOINTS = {
         USER: (id) => `${API_URL}/api/v1/likes/user/${id}`,
     },
     MATCHES: {
-        LIST: `${API_URL}/api/v1/matches`,
+        LIST: `${API_URL}/api/v1/matches/`,
         POTENTIAL: `${API_URL}/api/v1/matches/potential`,
     },
 };

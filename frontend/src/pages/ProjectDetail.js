@@ -97,15 +97,17 @@ const ProjectDetail = () => {
               Requirements
             </Typography>
             <Box sx={{ mb: 2 }}>
-              {project.requirements &&
-                JSON.parse(project.requirements).map((req, index) => (
-                  <Chip
-                    key={index}
-                    label={req}
-                    sx={{ mr: 1, mb: 1 }}
-                    variant="outlined"
-                  />
-                ))}
+              {project.requirements && (() => {
+                try {
+                  const parsed = JSON.parse(project.requirements);
+                  if (Array.isArray(parsed)) {
+                    return parsed.map((req, index) => (
+                      <Chip key={index} label={req} sx={{ mr: 1, mb: 1 }} variant="outlined" />
+                    ));
+                  }
+                } catch {}
+                return <Typography>{project.requirements}</Typography>;
+              })()}
             </Box>
           </Grid>
 
