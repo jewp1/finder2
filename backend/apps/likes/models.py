@@ -1,24 +1,25 @@
-from django.db import models
 from django.conf import settings
+from django.db import models
+from django_prometheus.models import ExportModelOperationsMixin
 
 
-class Like(models.Model):
+class Like(ExportModelOperationsMixin("like"), models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='likes_given',
+        related_name="likes_given",
     )
     liked_user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='likes_received',
+        related_name="likes_received",
         null=True,
         blank=True,
     )
     project = models.ForeignKey(
-        'projects.Project',
+        "projects.Project",
         on_delete=models.CASCADE,
-        related_name='likes',
+        related_name="likes",
         null=True,
         blank=True,
     )
@@ -26,7 +27,7 @@ class Like(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = 'likes'
+        db_table = "likes"
 
     def __str__(self):
-        return f'Like by user {self.user_id}'
+        return f"Like by user {self.user_id}"

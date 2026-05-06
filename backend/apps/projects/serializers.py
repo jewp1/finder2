@@ -1,5 +1,7 @@
 import json
+
 from rest_framework import serializers
+
 from apps.projects.models import Project
 from apps.users.serializers import UserSerializer
 
@@ -22,26 +24,34 @@ class RequirementsField(serializers.Field):
                 json.loads(data)
                 return data
             except json.JSONDecodeError:
-                items = [r.strip() for r in data.split(',') if r.strip()]
+                items = [r.strip() for r in data.split(",") if r.strip()]
                 return json.dumps(items)
         return json.dumps([])
 
 
 class ProjectSerializer(serializers.ModelSerializer):
-    owner_id = serializers.IntegerField(source='owner.id', read_only=True)
+    owner_id = serializers.IntegerField(source="owner.id", read_only=True)
     requirements = RequirementsField(allow_null=True, required=False)
 
     class Meta:
         model = Project
         fields = [
-            'id', 'title', 'description', 'requirements', 'budget',
-            'duration', 'status', 'owner_id', 'created_at', 'updated_at',
+            "id",
+            "title",
+            "description",
+            "requirements",
+            "budget",
+            "duration",
+            "status",
+            "owner_id",
+            "created_at",
+            "updated_at",
         ]
-        read_only_fields = ['id', 'owner_id', 'created_at', 'updated_at']
+        read_only_fields = ["id", "owner_id", "created_at", "updated_at"]
 
 
 class ProjectWithOwnerSerializer(ProjectSerializer):
     owner = UserSerializer(read_only=True)
 
     class Meta(ProjectSerializer.Meta):
-        fields = ProjectSerializer.Meta.fields + ['owner']
+        fields = ProjectSerializer.Meta.fields + ["owner"]

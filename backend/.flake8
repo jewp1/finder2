@@ -1,0 +1,12 @@
+[flake8]
+max-line-length = 120
+exclude =
+    .git,
+    __pycache__,
+    .venv,
+    venv,
+    migrations,
+    staticfiles,
+    .pytest_cache
+per-file-ignores =
+    tests/settings_test.py: F401,F403,F405

@@ -3,6 +3,8 @@
 DB_HOST="${POSTGRES_SERVER:-db}"
 DB_PORT="${POSTGRES_PORT:-5432}"
 
+mkdir -p "${PROMETHEUS_MULTIPROC_DIR:-/tmp/prometheus_multiproc}"
+
 echo "Waiting for PostgreSQL at $DB_HOST:$DB_PORT..."
 while ! nc -z "$DB_HOST" "$DB_PORT"; do
   sleep 0.5

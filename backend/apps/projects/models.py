@@ -1,15 +1,16 @@
-from django.db import models
 from django.conf import settings
+from django.db import models
+from django_prometheus.models import ExportModelOperationsMixin
 
 
-class Project(models.Model):
-    STATUS_OPEN = 'open'
-    STATUS_IN_PROGRESS = 'in_progress'
-    STATUS_COMPLETED = 'completed'
+class Project(ExportModelOperationsMixin("project"), models.Model):
+    STATUS_OPEN = "open"
+    STATUS_IN_PROGRESS = "in_progress"
+    STATUS_COMPLETED = "completed"
     STATUS_CHOICES = [
-        (STATUS_OPEN, 'Open'),
-        (STATUS_IN_PROGRESS, 'In Progress'),
-        (STATUS_COMPLETED, 'Completed'),
+        (STATUS_OPEN, "Open"),
+        (STATUS_IN_PROGRESS, "In Progress"),
+        (STATUS_COMPLETED, "Completed"),
     ]
 
     title = models.CharField(max_length=500)
@@ -21,13 +22,13 @@ class Project(models.Model):
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='projects',
+        related_name="projects",
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'projects'
+        db_table = "projects"
 
     def __str__(self):
         return self.title

@@ -1,0 +1,10 @@
+[tool.black]
+line-length = 120
+target-version = ["py312"]
+exclude = '''/(migrations|staticfiles|\.git|\.venv|venv)/'''
+
+[tool.isort]
+profile = "black"
+line_length = 120
+skip = ["migrations", "staticfiles"]
+known_first_party = ["config", "apps"]
