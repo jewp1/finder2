@@ -8,3 +8,23 @@ profile = "black"
 line_length = 120
 skip = ["migrations", "staticfiles"]
 known_first_party = ["config", "apps"]
+
+[tool.coverage.run]
+source = ["."]
+omit = [
+    "*/migrations/*",
+    "*/tests/*",
+    "manage.py",
+    "*/staticfiles/*",
+    "config/wsgi.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if TYPE_CHECKING:",
+]
+show_missing = true
+skip_empty = true

@@ -19,8 +19,18 @@ frontend/dist/
 .env.*
 !.env.example
 
+# Test cache
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
 # Logs
 *.log
+
+# Ansible
+ansible/*.retry
+ansible/vault_pass.txt
 
 # IDE
 .idea/

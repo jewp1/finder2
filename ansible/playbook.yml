@@ -1,0 +1,84 @@
+---
+- name: Deploy Project Finder
+  hosts: app_servers
+  become: true
+  vars_files:
+    - group_vars/all.yml
+
+  tasks:
+    - name: Install required system packages
+      apt:
+        name:
+          - docker.io
+          - docker-compose-plugin
+          - git
+          - curl
+        state: present
+        update_cache: true
+
+    - name: Enable and start Docker
+      systemd:
+        name: docker
+        enabled: true
+        state: started
+
+    - name: Add deploy user to docker group
+      user:
+        name: "{{ deploy_user }}"
+        groups: docker
+        append: true
+
+    - name: Create app directory
+      file:
+        path: "{{ app_dir }}"
+        state: directory
+        owner: "{{ deploy_user }}"
+        mode: "0755"
+
+    - name: Clone or update repository
+      git:
+        repo: "{{ repo_url }}"
+        dest: "{{ app_dir }}"
+        version: main
+        force: true
+      become_user: "{{ deploy_user }}"
+
+    - name: Copy .env file to server
+      copy:
+        src: .env
+        dest: "{{ app_dir }}/.env"
+        owner: "{{ deploy_user }}"
+        mode: "0600"
+
+    - name: Log in to GitHub Container Registry
+      shell: |
+        echo "{{ ghcr_token }}" | docker login ghcr.io -u "{{ ghcr_user }}" --password-stdin
+      no_log: true
+      when: ghcr_token is defined
+
+    - name: Pull latest images from GHCR
+      shell: |
+        cd {{ app_dir }}
+        docker compose pull
+      become_user: "{{ deploy_user }}"
+
+    - name: Start services with docker compose
+      shell: |
+        cd {{ app_dir }}
+        docker compose up -d --remove-orphans
+      become_user: "{{ deploy_user }}"
+
+    - name: Run database migrations
+      shell: |
+        cd {{ app_dir }}
+        docker compose exec -T backend python manage.py migrate --noinput
+      become_user: "{{ deploy_user }}"
+
+    - name: Verify backend is healthy
+      uri:
+        url: http://localhost:8000/health
+        status_code: 200
+      retries: 10
+      delay: 5
+      register: health_check
+      until: health_check.status == 200

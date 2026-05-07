@@ -1,0 +1,8 @@
+deploy_user: ubuntu
+app_dir: /home/ubuntu/finder2
+repo_url: https://github.com/SergeyWork21/finder2.git
+
+image_backend: ghcr.io/sergeywork21/finder2/backend:latest
+image_frontend: ghcr.io/sergeywork21/finder2/frontend:latest
+
+docker_compose_version: "2.24.5"
